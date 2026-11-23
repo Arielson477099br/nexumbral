@@ -1,6 +1,6 @@
 // NEXUMBRAL — servidor: autenticação, persistência, IA (texto, visão, ferramentas) e imagens.
 const express=require("express"),helmet=require("helmet"),rateLimit=require("express-rate-limit"),bcrypt=require("bcryptjs"),jwt=require("jsonwebtoken"),Database=require("better-sqlite3"),path=require("path");
-const {SECRET,ANTHROPIC_API_KEY:KEY,MODEL="claude-sonnet-5-5",DAILY_LIMIT=100,PORT=3000,IMAGE_API_URL,IMAGE_API_KEY,IMAGE_MODEL}=process.env;
+const {SECRET,ANTHROPIC_API_KEY:KEY,MODEL="claude-sonnet-5",DAILY_LIMIT=100,PORT=3000,IMAGE_API_URL,IMAGE_API_KEY,IMAGE_MODEL}=process.env;
 if(!SECRET||SECRET.length<32){console.error("Defina SECRET (32+ caracteres) no .env");process.exit(1)}
 const db=new Database(process.env.DB_FILE||"nexumbral.db");db.pragma("journal_mode=WAL");
 db.exec(`CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY,email TEXT UNIQUE NOT NULL,name TEXT NOT NULL,hash TEXT NOT NULL,created INTEGER);
@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS inv(id TEXT NOT NULL,user_id INTEGER NOT NULL,data TE
 CREATE TABLE IF NOT EXISTS usage(user_id INTEGER,day TEXT,n INTEGER,PRIMARY KEY(user_id,day));
 CREATE TABLE IF NOT EXISTS img(id INTEGER PRIMARY KEY,user_id INTEGER,inv_id TEXT,prompt TEXT,b64 TEXT,created INTEGER);`);
 const app=express();
+app.set("trust proxy",1);
 app.use(helmet({contentSecurityPolicy:{directives:{defaultSrc:["'self'"],scriptSrc:["'self'","'unsafe-inline'"],styleSrc:["'self'","'unsafe-inline'","https://fonts.googleapis.com"],fontSrc:["https://fonts.gstatic.com"],imgSrc:["'self'","blob:","data:"],connectSrc:["'self'"]}}}));
 app.use(express.json({limit:"25mb"}));
 const ck=r=>Object.fromEntries((r.headers.cookie||"").split(";").map(s=>s.trim().split("=")).filter(a=>a[0]&&a[1]));

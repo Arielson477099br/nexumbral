@@ -1,0 +1,13 @@
+process.env.SECRET="x".repeat(32);process.env.DB_FILE=":memory:";delete process.env.ANTHROPIC_API_KEY;
+const test=require("node:test"),assert=require("node:assert"),{app,RUN}=require("../server");
+let base,ck="",srv;test.before(()=>new Promise(r=>{srv=app.listen(0,()=>{base="http://127.0.0.1:"+srv.address().port;r()})}));test.after(()=>srv.close());
+const J=(p,m="GET",b)=>fetch(base+p,{method:m,headers:{"content-type":"application/json",cookie:ck},body:b&&JSON.stringify(b)});
+const U={name:"Ana",email:"a@x.com",password:"senha1234"};
+test("cadastro, duplicidade e login",async()=>{let r=await J("/api/register","POST",U);assert.equal(r.status,200);ck=r.headers.get("set-cookie").split(";")[0];
+ assert.equal((await J("/api/register","POST",U)).status,409);assert.equal((await J("/api/login","POST",{...U,password:"errada123"})).status,401);assert.equal((await J("/api/login","POST",U)).status,200)});
+test("rotas protegidas sem sessão",async()=>{const c=ck;ck="";assert.equal((await J("/api/inv")).status,401);assert.equal((await J("/api/ai","POST",{})).status,401);ck=c});
+test("persistência: criar, ler, excluir",async()=>{assert.equal((await J("/api/inv/i1","PUT",{id:"i1",title:"T",msgs:[]})).status,200);assert.equal((await(await J("/api/inv")).json())[0].title,"T");await J("/api/inv/i1","DELETE");assert.equal((await(await J("/api/inv")).json()).length,0)});
+test("IA sem chave informa 503",async()=>assert.equal((await J("/api/ai","POST",{messages:[{role:"user",content:"oi"}]})).status,503));
+test("solver: solução única, múltipla e nenhuma",()=>{const n=(v,r)=>JSON.parse(RUN.resolver_restricoes({variaveis:v,restricoes:r})).solucoes;
+ assert.equal(n({a:[1,9],b:[1,9]},["a+b==5","a-b==1"]),1);assert.equal(n({x:[-3,3]},["x*x==4"]),2);assert.equal(n({a:[1,3]},["a>5"]),0)});
+test("calcular bloqueia código arbitrário",()=>{assert.equal(RUN.calcular({expressao:"2**10"}),"1024");assert.throws(()=>RUN.calcular({expressao:"process.exit()"}))});

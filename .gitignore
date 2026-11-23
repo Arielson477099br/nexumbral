@@ -1,0 +1,21 @@
+
+# Dependências
+node_modules/
+
+# Variáveis de ambiente e credenciais
+.env
+.env.*
+
+# Permite manter o arquivo de exemplo
+!.env.example
+
+# Banco de dados local
+*.db
+*.db-shm
+*.db-wal
+
+# Arquivos temporários
+npm-debug.log*
+.DS_Store
+.vscode/
+coverage/

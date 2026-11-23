@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NEXUMBRAL — A arte de decifrar</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Playfair+Display:wght@500;600&display=swap">
+<style>
+:root{--bg:#F5F0E5;--sf:#fff;--tx:#0B1F3B;--mu:#64748B;--gd:#D4AF7C;--bl:#3B82F6;--ln:rgba(11,31,59,.15);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0B1F3B;--sf:rgba(245,240,229,.07);--tx:#F5F0E5;--ln:rgba(245,240,229,.16)}}
+:root[data-theme=dark]{--bg:#0B1F3B;--sf:rgba(245,240,229,.07);--tx:#F5F0E5;--ln:rgba(245,240,229,.16)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--tx);font:400 15px/1.55 Montserrat,system-ui,sans-serif}
+[hidden]{display:none!important}
+.app{display:grid;grid-template-columns:230px 1fr;height:100%}
+aside{background:#0B1F3B;color:#F5F0E5;padding:22px 14px;display:flex;flex-direction:column;gap:22px;border-right:1px solid rgba(245,240,229,.12)}
+.brand{display:flex;flex-direction:column;align-items:center;gap:6px}
+.brand svg{width:54px;height:54px}
+.wm{font:500 21px Playfair Display,Georgia,serif;letter-spacing:.04em}
+.tg{font-size:8.5px;letter-spacing:.3em;color:#D4AF7C}
+nav{display:flex;flex-direction:column;gap:4px}
+nav button{background:none;border:0;color:#F5F0E5;text-align:left;padding:10px 14px;border-radius:10px;font:500 14px Montserrat,sans-serif;cursor:pointer;transition:background .2s}
+nav button:hover{background:rgba(245,240,229,.1)}
+nav button.on{background:#D4AF7C;color:#0B1F3B}
+button:focus-visible,textarea:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--bl);outline-offset:2px}
+main{overflow:auto;min-width:0}
+section{padding:36px clamp(18px,4vw,56px);max-width:980px;margin:0 auto}
+h1,h2{font-family:Playfair Display,Georgia,serif;font-weight:500;margin:0 0 6px;letter-spacing:-.01em}
+h1{font-size:clamp(30px,4.4vw,46px);line-height:1.12}h2{font-size:28px}
+.mu{color:var(--mu)}
+.rule{width:64px;height:2px;background:var(--gd);margin:14px 0 26px}
+.box{background:var(--sf);border:1px solid var(--ln);border-radius:16px}
+.comp{padding:14px;display:flex;flex-direction:column;gap:10px}
+.comp.big{padding:20px;border-color:var(--gd)}
+textarea,input,select{font:inherit;color:var(--tx);background:transparent;border:1px solid var(--ln);border-radius:10px;padding:10px 12px;width:100%}
+select option{color:#0B1F3B}
+.comp textarea{border:0;resize:none;padding:4px;min-height:48px;max-height:200px}.comp.big textarea{min-height:92px;font-size:16px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.sp{flex:1}
+.b{border:1px solid var(--ln);background:transparent;color:var(--tx);border-radius:10px;padding:9px 16px;font:500 13px Montserrat,sans-serif;cursor:pointer;transition:transform .15s,background .2s}
+.b:hover{transform:translateY(-1px);background:var(--sf)}
+.b.g{background:#D4AF7C;border-color:#D4AF7C;color:#0B1F3B}.b.g:hover{background:#D4AF7C;filter:brightness(1.06)}
+.b:disabled{opacity:.5;cursor:wait;transform:none}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:30px 0}
+.stats div{padding:14px 16px}.stats b{display:block;font:500 26px Playfair Display,Georgia,serif}
+.xp{height:6px;border-radius:3px;background:var(--ln);overflow:hidden;margin-top:8px}.xp i{display:block;height:100%;background:var(--gd)}
+.lab{display:flex;flex-direction:column;height:100%;padding-top:20px;padding-bottom:16px}
+.lh{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.lh input{font:500 20px Playfair Display,Georgia,serif;border:0;border-bottom:1px solid var(--ln);border-radius:0;flex:1;min-width:160px;padding:4px 0}
+.hints{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
+#msgs{flex:1;overflow:auto;display:flex;flex-direction:column;gap:12px;padding:6px 2px 14px}
+.m{max-width:86%;padding:12px 16px;border-radius:14px;border:1px solid var(--ln);overflow-wrap:anywhere}
+.m.u{align-self:flex-end;background:#0B1F3B;color:#F5F0E5;border-color:#0B1F3B}
+.m.a{align-self:flex-start;background:var(--sf)}.m.e{border-color:#b45454}
+.m h4{margin:10px 0 2px;font-family:Playfair Display,Georgia,serif;font-size:17px}
+code{background:var(--ln);padding:1px 5px;border-radius:5px;font-size:13px}
+.empty{margin:auto;max-width:420px;text-align:center;color:var(--mu)}
+.dots::after{content:"Investigando…";color:var(--mu)}
+#prev{display:flex;gap:8px;flex-wrap:wrap}
+.th{position:relative}.th img{width:58px;height:58px;object-fit:cover;border-radius:8px;border:1px solid var(--ln)}
+.th button{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;border:0;background:#0B1F3B;color:#F5F0E5;cursor:pointer}
+.drag{border-color:var(--bl)}
+.fg{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:14px}
+label{display:flex;flex-direction:column;gap:5px;font-size:12.5px;color:var(--mu);font-weight:500}
+.it{display:flex;gap:12px;align-items:center;padding:14px 16px;margin-top:10px}
+.it .t{flex:1;min-width:0}.it .t b{display:block;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tag{font-size:11.5px;border:1px solid var(--gd);border-radius:20px;padding:2px 10px;white-space:nowrap}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#0B1F3B;color:#F5F0E5;border:1px solid #D4AF7C;padding:10px 18px;border-radius:10px;font-size:13px;z-index:9}
+.note{font-size:12.5px;color:var(--mu);margin-top:18px}
+@media(max-width:760px){.app{grid-template-columns:1fr;grid-template-rows:auto 1fr}aside{flex-direction:row;align-items:center;padding:10px 12px;gap:10px;border:0;overflow-x:auto}.brand{flex-direction:row}.brand svg{width:34px;height:34px}.tg{display:none}nav{flex-direction:row}nav button{white-space:nowrap;padding:8px 12px}.m{max-width:94%}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="lg" viewBox="0 0 100 100"><path d="M10 94V38L50 8l40 30v56" fill="none" stroke="#F5F0E5" stroke-width="8"/><path d="M26 94V46l24-18 24 18v48" fill="none" stroke="#D4AF7C" stroke-width="6"/><path d="M40 94V55l10-8 10 8v39" fill="none" stroke="#F5F0E5" stroke-width="5"/><path d="M50 52l3 8 8 3-8 3-3 8-3-8-8-3 8-3z" fill="#D4AF7C"/><path d="M34 95h32L50 80z" fill="#D4AF7C"/></symbol></svg>
+<div class="app">
+<aside><div class="brand"><svg role="img" aria-label="Logotipo NEXUMBRAL"><use href="#lg"/></svg><div><div class="wm">NEXUMBRAL</div><div class="tg">A ARTE DE DECIFRAR</div></div></div>
+<nav aria-label="Principal"><button data-v="home">Início</button><button data-v="lab">Investigar</button><button data-v="forge">Criar enigma</button><button data-v="arch">Histórico</button><button id="out">Sair</button></nav></aside>
+<main>
+<section id="v-home"><h1>Bem-vindo, investigador.</h1><p class="mu" style="max-width:520px;margin:6px 0 0">Todo mistério possui pistas. Toda pista pode revelar uma descoberta.</p><div class="rule"></div>
+<div class="box comp big"><label for="hq" class="mu" style="font-weight:400">O que vamos investigar?</label><textarea id="hq" placeholder="Cole um enigma, um problema de lógica ou uma conta difícil…"></textarea>
+<div class="row"><button class="b" id="hf">Enviar imagem</button><button class="b" id="hg">Criar enigma</button><span class="sp"></span><button class="b g" id="hs">Iniciar investigação</button></div></div>
+<div class="stats" id="stats"></div>
+<h2 style="font-size:22px">Continue de onde parou</h2><div id="recent"></div>
+<p class="note" id="dep"></p></section>
+
+<section id="v-lab" class="lab" hidden>
+<div class="lh"><input id="ttl" aria-label="Título da investigação" placeholder="Nova investigação"><button class="b" id="done">Marcar como resolvida</button><button class="b" id="nw">Nova</button></div>
+<div class="hints" role="group" aria-label="Bússola de pistas"><span class="mu" style="font-size:12.5px">Bússola de pistas</span><button class="b" data-h="1">Pista inicial</button><button class="b" data-h="2">Intermediária</button><button class="b" data-h="3">Avançada</button><button class="b" data-h="4">Solução completa</button></div>
+<div id="msgs" aria-live="polite"></div>
+<div class="box comp" id="cp"><div id="prev"></div><textarea id="q" rows="1" aria-label="Mensagem" placeholder="Escreva, formule uma hipótese ou anexe uma imagem…"></textarea>
+<div class="row"><button class="b" id="att" aria-label="Anexar imagens">Anexar</button><input type="file" id="fi" accept="image/png,image/jpeg,image/webp" multiple hidden><span class="mu" style="font-size:12px">PNG, JPG ou WEBP, até 5 MB</span><span class="sp"></span><button class="b g" id="sd">Enviar</button></div></div></section>
+
+<section id="v-forge" hidden><h2>Forja de enigmas</h2><p class="mu">Descreva o desafio. A solução é guardada à parte e só aparece quando você pedir.</p><div class="rule"></div>
+<form id="ff" class="box" style="padding:20px"><div class="fg">
+<label>Tema<input name="tema" required placeholder="Um farol, uma biblioteca, um cofre…"></label>
+<label>Categoria<select name="cat"><option>Lógica dedutiva</option><option>Matemática</option><option>Sequências</option><option>Combinatória</option><option>Probabilidade</option><option>Criptograma e cifras</option><option>Pensamento lateral</option><option>Mistério com pistas</option></select></label>
+<label>Dificuldade<select name="dif"><option value="1">1 · Iniciante</option><option value="2">2 · Intermediário</option><option value="3" selected>3 · Avançado</option><option value="4">4 · Especialista</option><option value="5">5 · Extremamente complexo</option></select></label>
+<label>Pessoas ou elementos<input name="n" type="number" min="2" max="8" value="4"></label></div>
+<label>Contexto narrativo (opcional)<textarea name="ctx" rows="2"></textarea></label>
+<div class="row" style="margin-top:14px"><span class="mu" id="fst" style="font-size:12.5px"></span><span class="sp"></span><button class="b g" id="fgo">Forjar enigma</button></div></form></section>
+
+<section id="v-arch" hidden><h2>Arquivo de investigações</h2><p class="mu">Tudo o que você investiga fica salvo na sua conta.</p><div class="rule"></div>
+<input id="srch" type="search" aria-label="Pesquisar" placeholder="Pesquisar por título ou categoria"><div id="list"></div></section>
+</main></div>
+<script src="/shim.js"></script>
+<script>
+const $=s=>document.querySelector(s),esc=s=>s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const md=s=>esc(s).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/`([^`]+)`/g,"<code>$1</code>").replace(/^#{1,4} (.+)$/gm,"<h4>$1</h4>").replace(/^[-*] (.+)$/gm,"• $1").replace(/\n/g,"<br>");
+const SYS="Você é a NEXUMBRAL, IA investigativa especializada em enigmas, lógica e matemática. Personalidade: analítica, paciente, didática, com um sutil ar de mistério. Responda no idioma do usuário (padrão: português do Brasil). Use a ferramenta calcular para contas e resolver_restricoes para enumerar todas as soluções de problemas com variáveis discretas, informando se a solução é única, múltipla ou inexistente. Nunca invente certezas: se faltar dado, houver ambiguidade ou a imagem estiver ilegível, diga e peça esclarecimento. Ao resolver, organize em: interpretação, dados, estratégia, demonstração, resultado, verificação. Se o usuário quer resolver sozinho, não revele a resposta: ofereça apenas o nível de pista pedido.";
+const HP={1:"Dê apenas a PISTA INICIAL: uma orientação discreta, sem revelar a resposta.",2:"Dê a PISTA INTERMEDIÁRIA: um direcionamento mais específico, ainda sem entregar a resposta.",3:"Dê a PISTA AVANÇADA: a informação decisiva, deixando o último passo para o usuário.",4:"Apresente a SOLUÇÃO COMPLETA com demonstração e verificação."};
+const DN=["","Iniciante","Intermediário","Avançado","Especialista","Extremamente complexo"],LV=["Aprendiz","Observador","Rastreador","Decifrador","Mestre de enigmas"];
+const OK=new Set(["Math","abs","min","max","floor","ceil","round","sqrt","pow","true","false"]);
+function safe(e,x=[]){if(!/^[\w\s+\-*\/%().,<>=!&|?:]+$/.test(e)||(e.match(/[A-Za-z_]\w*/g)||[]).some(i=>!OK.has(i)&&!x.includes(i)))throw new Error("Expressão não permitida")}
+const tools=[{name:"calcular",description:"Avalia uma expressão aritmética (JavaScript, com Math.*).",inputSchema:{type:"object",properties:{expressao:{type:"string"}},required:["expressao"]},execute:({expressao})=>{safe(expressao);return String(Function('"use strict";return('+expressao+')')())}},
+{name:"resolver_restricoes",description:"Força bruta exaustiva sobre variáveis inteiras de domínio finito. variaveis: {nome:[min,max]}. restricoes: expressões JS booleanas (&&, ||, !, ==, !=, <, >, +, -, *, /, %). Até 2.000.000 combinações. Retorna nº de soluções e até 10 exemplos.",inputSchema:{type:"object",properties:{variaveis:{type:"object"},restricoes:{type:"array",items:{type:"string"}}},required:["variaveis","restricoes"]},execute:({variaveis:V,restricoes:R})=>{const n=Object.keys(V);let t=1;n.forEach(k=>t*=V[k][1]-V[k][0]+1);if(t>2e6)throw new Error("Espaço de busca grande demais: "+t);R.forEach(r=>safe(r,n));const f=R.map(r=>Function(...n,'"use strict";return('+r+')')),v=n.map(k=>V[k][0]),S=[];let c=0;(function rec(i){if(i==n.length){if(f.every(g=>g(...v))){c++;if(S.length<10)S.push(Object.fromEntries(n.map((k,j)=>[k,v[j]])))}return}for(let x=V[n[i]][0];x<=V[n[i]][1];x++){v[i]=x;rec(i+1)}})(0);return JSON.stringify({combinacoes:t,solucoes:c,exemplos:S})}}];
+let db,uid,sample,canImg=false,invs=[],cur=null,imgs=[],held=[],busy=false;
+const col=()=>db.collection("data/users/"+uid);
+function toast(t){const e=document.createElement("div");e.className="toast";e.setAttribute("role","status");e.textContent=t;document.body.append(e);setTimeout(()=>e.remove(),3800)}
+function go(v){["home","lab","forge","arch"].forEach(x=>{$("#v-"+x).hidden=x!=v;$('[data-v='+x+']').classList.toggle("on",x==v)});if(v=="lab")drawChat();if(v=="home")$("main").scrollTop=0}
+function newInv(title,cat,sec){cur={id:"i"+Date.now().toString(36),title:title||"Nova investigação",cat:cat||"Livre",st:"aberta",msgs:[],sec:sec||"",cr:Date.now(),upd:Date.now()};held=[];imgs=[];prev()}
+function save(){cur.upd=Date.now();const i=invs.findIndex(x=>x.id==cur.id);if(i<0)invs.unshift(cur);if(db&&uid)col().doc(cur.id).set(cur).catch(()=>toast("Não foi possível salvar esta investigação."));render()}
+function drawChat(){const m=$("#msgs");m.innerHTML=cur&&cur.msgs.length?cur.msgs.map(b=>`<div class="m ${b.r}${b.err?" e":""}">${b.r=="a"?(b.t?md(b.t):'<span class="dots"></span>'):esc(b.t)}</div>`).join(""):'<p class="empty">Apresente um enigma, um problema ou uma imagem. Cada detalhe pode ser uma pista.</p>';m.scrollTop=m.scrollHeight;$("#ttl").value=cur?cur.title:"";$("#done").textContent=cur&&cur.st=="resolvida"?"Reabrir":"Marcar como resolvida"}
+function render(){const d=invs.filter(i=>i.st=="resolvida").length,u=invs.reduce((a,i)=>a+i.msgs.filter(m=>m.r=="u").length,0),xp=invs.length*10+d*40+u*2,l=Math.floor(xp/100),cats=new Set(invs.map(i=>i.cat)).size;
+$("#stats").innerHTML=[["Investigações",invs.length],["Resolvidas",d],["Categorias exploradas",cats]].map(([a,b])=>`<div class="box"><b>${b}</b><span class="mu" style="font-size:12.5px">${a}</span></div>`).join("")+`<div class="box"><b>${LV[Math.min(l,4)]}</b><span class="mu" style="font-size:12.5px">${xp} pontos de experiência</span><div class="xp"><i style="width:${xp%100}%"></i></div></div>`;
+const row=i=>`<div class="box it"><div class="t"><b>${esc(i.title)}</b><span class="mu" style="font-size:12px">${new Date(i.upd).toLocaleDateString("pt-BR")}</span></div><span class="tag">${esc(i.cat)}</span><span class="tag">${i.st=="resolvida"?"Resolvida":"Em aberto"}</span><button class="b" data-a="o" data-id="${i.id}">Abrir</button><button class="b" data-a="d" data-id="${i.id}">Excluir</button></div>`;
+const q=($("#srch").value||"").toLowerCase(),s=[...invs].sort((a,b)=>b.upd-a.upd);
+$("#recent").innerHTML=s.slice(0,3).map(row).join("")||'<p class="mu">Nenhuma investigação ainda. Comece pelo campo acima.</p>';
+$("#list").innerHTML=s.filter(i=>(i.title+i.cat).toLowerCase().includes(q)).map(row).join("")||'<p class="mu" style="margin-top:14px">Nada encontrado.</p>'}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(!b)return;const i=invs.find(x=>x.id==b.dataset.id);if(!i)return;if(b.dataset.a=="o"){cur=i;held=[];go("lab")}else if(b.dataset.a=="d"){if(b.dataset.c){invs=invs.filter(x=>x!=i);if(cur==i)cur=null;if(db&&uid)col().doc(i.id).delete();render()}else{b.dataset.c=1;b.textContent="Confirmar exclusão"}}});
+async function send(t,ov,label){if(busy)return;if(!sample)return toast("Abra esta página no Claude para consultar a IA.");t=(t||"").trim();if(!t&&!imgs.length&&!ov)return;if(imgs.length&&!canImg)return toast("Anexos de imagem não estão disponíveis nesta sessão.");
+if(!cur)newInv((label||t||"Investigação com imagem").slice(0,50));const n=imgs.length;held.push(...imgs);imgs=[];prev();
+const shown=label||t||"Analise a imagem enviada.";cur.msgs.push({r:"u",t:shown+(n?` [${n} imagem(ns)]`:"")});const last={r:"a",t:""};cur.msgs.push(last);$("#q").value="";drawChat();busy=true;$("#sd").disabled=true;
+let api=cur.msgs.slice(0,-1).map(m=>({role:m.r=="u"?"user":"assistant",content:m.t}));api[api.length-1].content=ov||t||"Analise a imagem enviada.";
+const ctx=SYS+(cur.sec?"\n\nSOLUÇÃO SECRETA do enigma (não revele sem pedido de solução): "+cur.sec:"");
+if(api[0].role=="user")api[0].content=ctx+"\n\n---\n"+api[0].content;else api.unshift({role:"user",content:ctx+"\n\nApresente o enigma."});
+try{const o={tools,cache:false,modelTier:"complex",onText:({text})=>{last.t=text;const k=$("#msgs").lastElementChild;if(k){k.innerHTML=md(text);$("#msgs").scrollTop=1e9}}};if(held.length)o.images=held.slice(-4);const r=await sample(api,o);last.t=r.text||last.t}
+catch(e){last.err=1;last.t="Não foi possível concluir a análise: "+(e.code=="rate_limited"?"limite de uso atingido. Aguarde um instante e tente de novo.":e.code=="not_granted"?"a permissão para consultar a IA foi negada.":(e.message||"erro desconhecido."))}
+busy=false;$("#sd").disabled=false;save();drawChat()}
+function addFiles(fl){for(const f of fl){if(!/^image\/(png|jpe?g|webp)$/.test(f.type))return toast("Formato não aceito. Use PNG, JPG ou WEBP.");if(f.size>5e6)return toast("A imagem passa de 5 MB.");if(imgs.length>=4)return toast("Máximo de 4 imagens por mensagem.");imgs.push(f)}prev()}
+function prev(){const p=$("#prev");p.innerHTML="";imgs.forEach((f,i)=>{const d=document.createElement("div");d.className="th";const m=new Image();m.src=URL.createObjectURL(f);m.alt="Anexo "+(i+1);const b=document.createElement("button");b.textContent="×";b.setAttribute("aria-label","Remover anexo "+(i+1));b.onclick=()=>{imgs.splice(i,1);prev()};d.append(m,b);p.append(d)})}
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>go(b.dataset.v));
+$("#att").onclick=()=>$("#fi").click();$("#fi").onchange=e=>{addFiles(e.target.files);e.target.value=""};
+$("#hf").onclick=()=>{go("lab");$("#fi").click()};$("#hg").onclick=()=>go("forge");
+$("#hs").onclick=()=>{const t=$("#hq").value;if(!t.trim())return $("#hq").focus();$("#hq").value="";cur=null;go("lab");send(t)};
+$("#sd").onclick=()=>send($("#q").value);$("#q").onkeydown=e=>{if(e.key=="Enter"&&!e.shiftKey){e.preventDefault();send($("#q").value)}};
+$("#q").oninput=e=>{e.target.style.height="auto";e.target.style.height=e.target.scrollHeight+"px"};
+const cp=$("#cp");["dragover","dragenter"].forEach(v=>cp.addEventListener(v,e=>{e.preventDefault();cp.classList.add("drag")}));["dragleave","drop"].forEach(v=>cp.addEventListener(v,e=>{e.preventDefault();cp.classList.remove("drag")}));cp.addEventListener("drop",e=>addFiles(e.dataTransfer.files));
+document.querySelectorAll("[data-h]").forEach(b=>b.onclick=()=>{if(!cur||!cur.msgs.length)return toast("Apresente um enigma antes de pedir pistas.");send("",HP[b.dataset.h],b.textContent)});
+$("#nw").onclick=()=>{cur=null;held=[];imgs=[];prev();drawChat();$("#q").focus()};
+$("#ttl").onchange=e=>{if(cur){cur.title=e.target.value||"Sem título";save()}else e.target.value=""};
+$("#done").onclick=()=>{if(!cur)return;cur.st=cur.st=="resolvida"?"aberta":"resolvida";save();drawChat()};
+$("#srch").oninput=render;
+$("#ff").onsubmit=async e=>{e.preventDefault();if(busy)return;if(!sample)return toast("Abra esta página no Claude para forjar enigmas.");const f=Object.fromEntries(new FormData(e.target)),b=$("#fgo");b.disabled=true;busy=true;$("#fst").textContent="Forjando e verificando o enigma…";
+const p=`Crie um enigma ORIGINAL em português. Tema: ${f.tema}. Categoria: ${f.cat}. Dificuldade: ${f.dif}/5 (${DN[f.dif]}). Pessoas ou elementos: ${f.n}. Contexto: ${f.ctx||"livre"}. A dificuldade deve vir da estrutura lógica, não de enunciado confuso. Sempre que possível verifique com as ferramentas se a solução existe e é única. Responda SOMENTE com JSON: {"titulo":"","enunciado":"","solucao":"resposta e raciocínio resumido","verificacao":"como foi verificado, ou limitação"}`;
+try{const j=await sample.json(p,{tools,cache:false,modelTier:"complex"});newInv(j.titulo,f.cat,j.solucao+" | Verificação: "+j.verificacao);cur.msgs=[{r:"a",t:"**"+j.titulo+"**\n\n"+j.enunciado}];save();go("lab")}
+catch(x){toast("Não foi possível forjar o enigma: "+(x.code=="rate_limited"?"limite de uso atingido.":x.message||"tente novamente."))}
+b.disabled=false;busy=false;$("#fst").textContent=""};
+go("home");render();
+(async()=>{try{const u=await claude.use("user");uid=u&&await u.id();db=await claude.use("db");sample=await claude.use("sample");if(sample)try{canImg=!!(await sample.limits()).images}catch{}
+if(!sample)$("#dep").textContent="A consulta à IA depende do ambiente Claude, que não está disponível nesta visualização.";
+if(db&&uid)col().onSnapshot(s=>{invs=s.docs.map(d=>({id:d.id,...d.data()}));if(cur){const k=invs.find(x=>x.id==cur.id);if(k&&!busy)cur=k}render()},()=>toast("Não foi possível carregar o histórico."));
+else $("#dep").textContent="Entre no Claude para salvar o histórico na sua conta."}catch{$("#dep").textContent="Recursos do Claude indisponíveis nesta visualização."}})();
+</script><script>$("#out").onclick=async()=>{await fetch("/api/logout",{method:"POST"});location="/login.html"}</script></body></html>
